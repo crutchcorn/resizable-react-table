@@ -35,7 +35,7 @@ export const Row = ({ row, isFirst, tableSize }: RowProps) => {
       {row.map((column, i) => {
         return (
           <Column
-              key={i}
+            key={i}
             columnRef={assignInitSize}
             column={column}
             isFirst={isFirst}

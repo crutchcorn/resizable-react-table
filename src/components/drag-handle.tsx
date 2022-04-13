@@ -51,7 +51,7 @@ export const DragHandler = ({
 
   return (
     <div
-        data-testid={"drag-handle"}
+        data-testid={`drag-handle-${direction}` }
       ref={elRef as any}
       style={{
         ...(direction === 'x'
