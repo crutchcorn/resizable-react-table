@@ -52,6 +52,18 @@ export const DragHandler = ({
     document.addEventListener('mouseup', onMouseUp);
   };
 
+  React.useLayoutEffect(() => {
+      function customEventHandler(e: CustomEvent) {
+            e.stopPropagation();
+            e.preventDefault();
+            move(Number(e.detail['amount']));
+      }
+      elRef.current?.addEventListener('move', customEventHandler as never);
+      return () => {
+          elRef.current?.removeEventListener('move', customEventHandler as never);
+      }
+  }, [move])
+
   return (
     <div
       data-testid={`drag-handle-${direction}` }

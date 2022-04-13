@@ -7,8 +7,6 @@ interface TableProps {
 }
 
 function findDragHandle(column: number | string, row: number | string, direction: "x" | "y") {
-    const query = `[data-testid^="drag-handle"][data-column="${column}"][data-row="${row}"][data-direction="${direction}"]`;
-    console.log({query});
     return document.querySelector(
         `[data-testid^="drag-handle"][data-column="${column}"][data-row="${row}"][data-direction="${direction}"]`
     ) as HTMLElement | null;
@@ -17,21 +15,24 @@ function findDragHandle(column: number | string, row: number | string, direction
 export const Table = ({data}: TableProps) => {
     const [tableSize, ref] = useDimensions();
 
+    const dividerEditMode = React.useRef<'none' | 'navigate' | 'drag'>('none');
+
     function enterEditMode() {
+        dividerEditMode.current = 'navigate';
         findDragHandle(0,0,'x')?.focus();
     }
 
-    function onKeyDown(event: KeyboardEvent) {
+    function onKeyDownNavMode(event: KeyboardEvent) {
         const {dataset} = event.currentTarget as HTMLElement;
         const column = Number(dataset.column);
         const row = Number(dataset.row);
         switch (event.key) {
             case "Space":
             case "Enter":
-                // enterEditMode();
+                dividerEditMode.current = 'drag';
                 break;
             case "Escape":
-                // exitMode();
+                dividerEditMode.current = 'none';
                 break;
             case "ArrowLeft":
                 findDragHandle(column - 1, row,'x')?.focus();
@@ -50,10 +51,64 @@ export const Table = ({data}: TableProps) => {
         }
     }
 
+    function onKeyDownEditMode(event: KeyboardEvent) {
+        const el = event.currentTarget as HTMLElement;
+        const direction = el.dataset.direction;
+        if (event.key === "Space" || event.key === "Enter" || event.key === "Escape") {
+            // Exit edit mode to nav mode
+            dividerEditMode.current = 'navigate';
+            return;
+        }
+        const createMoveEvent = (val: number) => {
+            return new CustomEvent('move', {detail: {amount: val}})
+        }
+        if (direction === 'x') {
+            switch (event.key) {
+                case "ArrowLeft":
+                    el.dispatchEvent(createMoveEvent(-10));
+                    break;
+                case "ArrowRight":
+                    el.dispatchEvent(createMoveEvent(10));
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (direction === 'y') {
+            switch (event.key) {
+                case "ArrowUp":
+                    el.dispatchEvent(createMoveEvent(-10));
+                    break;
+                case "ArrowDown":
+                    el.dispatchEvent(createMoveEvent(10));
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+        switch (dividerEditMode.current) {
+            case "drag":
+                onKeyDownEditMode(event);
+                break;
+            case "navigate":
+                onKeyDownNavMode(event);
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
         <div>
             <button onClick={enterEditMode}>Edit divider layout</button>
-            <table style={{position: 'relative'}} ref={ref}>
+            <table style={{position: 'relative'}} ref={ref} onBlur={(e) => {
+                // Prevent `none` from being set when divider is focused programmatically
+                if (e.currentTarget.contains(e.relatedTarget)) return;
+                dividerEditMode.current = 'none';
+            }}>
                 <tbody>
                 {data.map((row, i) => (
                     <Row key={i} tableSize={tableSize} rowIndex={i} row={row} isFirst={i === 0} dragHandlerProps={{onKeyDown: onKeyDown as never}}/>
