@@ -27,7 +27,7 @@ export const Table = ({data}: TableProps) => {
         const column = Number(dataset.column);
         const row = Number(dataset.row);
         switch (event.key) {
-            case "Space":
+            case " ":
             case "Enter":
                 dividerEditMode.current = 'drag';
                 break;
@@ -54,7 +54,7 @@ export const Table = ({data}: TableProps) => {
     function onKeyDownEditMode(event: KeyboardEvent) {
         const el = event.currentTarget as HTMLElement;
         const direction = el.dataset.direction;
-        if (event.key === "Space" || event.key === "Enter" || event.key === "Escape") {
+        if (event.key === " " || event.key === "Enter" || event.key === "Escape") {
             // Exit edit mode to nav mode
             dividerEditMode.current = 'navigate';
             return;
