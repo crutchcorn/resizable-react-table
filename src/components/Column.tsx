@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { DragHandler } from './drag-handle';
+import {DragHandler, DragHandlerProps} from './drag-handle/drag-handle';
 
 interface ColumnProps {
   isFirst: boolean;
@@ -7,6 +7,9 @@ interface ColumnProps {
   children: React.ReactNode;
   tableSize: { height: number; width: number };
   columnRef: React.Ref<HTMLElement>;
+  rowIndex: number;
+  colIndex: number;
+  dragHandlerProps?: DragHandlerProps['divProps'];
 }
 
 export const Column = ({
@@ -15,6 +18,9 @@ export const Column = ({
   children,
   tableSize,
   columnRef,
+  rowIndex,
+  colIndex,
+                         dragHandlerProps = {}
 }: ColumnProps) => {
   const [explicitWidth, setExplicitWidth] = React.useState<null | number>(null);
   const [initSize, setInitSize] = React.useState<{height: number, width: number} | null>(null);
@@ -48,6 +54,13 @@ export const Column = ({
             top: 0,
             height: tableSize.height,
             zIndex: 1,
+          }}
+          divProps={{
+            'data-column': colIndex,
+            'data-row': rowIndex,
+            'data-direction': 'x',
+            tabIndex: -1,
+            ...(dragHandlerProps as object)
           }}
         />
       )}

@@ -1,16 +1,19 @@
-import React, { MouseEventHandler, useRef } from 'react';
-import { debounce } from './utils';
+import React, {HTMLAttributes, MouseEventHandler, useRef} from 'react';
+import { debounce } from '../utils';
+import styles from './drag-handle.module.css';
 
-interface DragHandlerProps {
+export interface DragHandlerProps {
   move: (relativeX: number) => void;
   direction: 'x' | 'y';
   style?: object;
+    divProps?: Partial<HTMLAttributes<HTMLDivElement>> & Record<string, string | number>;
 }
 
 export const DragHandler = ({
   move,
   direction = 'x',
   style = {},
+                                divProps = {}
 }: DragHandlerProps) => {
   const elRef = useRef<HTMLElement | null>(null);
 
@@ -51,17 +54,12 @@ export const DragHandler = ({
 
   return (
     <div
-        data-testid={`drag-handle-${direction}` }
+      data-testid={`drag-handle-${direction}` }
       ref={elRef as any}
-      style={{
-        ...(direction === 'x'
-          ? { width: '2px', height: '100%' }
-          : { height: '2px', width: '100%' }),
-        backgroundColor: 'red',
-        cursor: direction === 'x' ? 'col-resize' : 'row-resize',
-        ...style,
-      }}
+      className={direction === 'x' ? styles.x : styles.y}
+      style={style}
       onMouseDown={onMouseDown}
+      {...divProps}
     />
   );
 };
