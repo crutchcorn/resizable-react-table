@@ -37,7 +37,7 @@ export const Column = ({
   const realWidth = explicitWidth || initSize?.width;
 
   return (
-    <td style={{ position: 'relative', width: realWidth }} ref={columnRef}>
+    <td style={{ position: 'relative', width: realWidth }} ref={columnRef as never}>
       {isFirst && (
         <DragHandler
           direction="x"

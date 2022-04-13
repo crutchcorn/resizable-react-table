@@ -28,7 +28,7 @@ export const DragHandler = ({
   );
 
   const onMouseUp = React.useCallback(
-    (e) => {
+    (e: Event) => {
       e.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
     },
