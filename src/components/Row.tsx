@@ -24,6 +24,7 @@ export const Row = ({ row, isFirst, tableSize }: RowProps) => {
   );
 
   const assignInitSize = React.useCallback((el: HTMLElement) => {
+    if (!el) return;
     setInitSize(el.getBoundingClientRect());
   }, []);
 
@@ -34,6 +35,7 @@ export const Row = ({ row, isFirst, tableSize }: RowProps) => {
       {row.map((column, i) => {
         return (
           <Column
+              key={i}
             columnRef={assignInitSize}
             column={column}
             isFirst={isFirst}

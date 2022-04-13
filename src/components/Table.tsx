@@ -12,7 +12,7 @@ export const Table = ({ data }: TableProps) => {
     <table style={{ position: 'relative' }} ref={ref}>
       <tbody>
         {data.map((row, i) => (
-          <Row tableSize={tableSize} row={row} isFirst={i === 0} />
+          <Row key={i} tableSize={tableSize} row={row} isFirst={i === 0} />
         ))}
       </tbody>
     </table>
