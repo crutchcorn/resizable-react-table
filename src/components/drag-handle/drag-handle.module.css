@@ -18,6 +18,10 @@
     cursor: row-resize;
 }
 
+[data-editmode="drag"] .x:focus, [data-editmode="drag"] .y:focus {
+    background-color: #ffce08;
+}
+
 .x:hover, .y:hover, .x:focus, .y:focus {
     background-color: #0843ff;
     border-width: 0px;

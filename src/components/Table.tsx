@@ -15,10 +15,10 @@ function findDragHandle(column: number | string, row: number | string, direction
 export const Table = ({data}: TableProps) => {
     const [tableSize, ref] = useDimensions();
 
-    const dividerEditMode = React.useRef<'none' | 'navigate' | 'drag'>('none');
+    const [dividerEditMode, setDividerEditMode] = React.useState<'none' | 'navigate' | 'drag'>('none');
 
     function enterEditMode() {
-        dividerEditMode.current = 'navigate';
+        setDividerEditMode('navigate');
         findDragHandle(0,0,'x')?.focus();
     }
 
@@ -29,10 +29,10 @@ export const Table = ({data}: TableProps) => {
         switch (event.key) {
             case " ":
             case "Enter":
-                dividerEditMode.current = 'drag';
+                setDividerEditMode('drag');
                 break;
             case "Escape":
-                dividerEditMode.current = 'none';
+                setDividerEditMode('none');
                 break;
             case "ArrowLeft":
                 // Row must be set to 0, otherwise it will never get the proper X drag handler
@@ -58,7 +58,7 @@ export const Table = ({data}: TableProps) => {
         const direction = el.dataset.direction;
         if (event.key === " " || event.key === "Enter" || event.key === "Escape") {
             // Exit edit mode to nav mode
-            dividerEditMode.current = 'navigate';
+            setDividerEditMode('navigate');
             return;
         }
         const createMoveEvent = (val: number) => {
@@ -91,7 +91,7 @@ export const Table = ({data}: TableProps) => {
     }
 
     function onKeyDown(event: KeyboardEvent) {
-        switch (dividerEditMode.current) {
+        switch (dividerEditMode) {
             case "drag":
                 onKeyDownEditMode(event);
                 break;
@@ -106,10 +106,10 @@ export const Table = ({data}: TableProps) => {
     return (
         <div>
             <button onClick={enterEditMode}>Edit divider layout</button>
-            <table style={{position: 'relative'}} ref={ref} onBlur={(e) => {
+            <table data-editmode={dividerEditMode} style={{position: 'relative'}} ref={ref} onBlur={(e) => {
                 // Prevent `none` from being set when divider is focused programmatically
                 if (e.currentTarget.contains(e.relatedTarget)) return;
-                dividerEditMode.current = 'none';
+                setDividerEditMode('none');
             }}>
                 <tbody>
                 {data.map((row, i) => (
