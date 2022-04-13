@@ -35,10 +35,12 @@ export const Table = ({data}: TableProps) => {
                 dividerEditMode.current = 'none';
                 break;
             case "ArrowLeft":
-                findDragHandle(column - 1, row,'x')?.focus();
+                // Row must be set to 0, otherwise it will never get the proper X drag handler
+                findDragHandle(column - 1, 0,'x')?.focus();
                 break;
             case "ArrowRight":
-                findDragHandle(column + 1, row,'x')?.focus();
+                // Row must be set to 0, otherwise it will never get the proper X drag handler
+                findDragHandle(column + 1, 0,'x')?.focus();
                 break;
             case "ArrowUp":
                 findDragHandle(column, row - 1,'y')?.focus();
