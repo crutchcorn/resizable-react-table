@@ -1,6 +1,6 @@
 import React from 'react';
 import {Row} from './Row';
-import useDimensions from 'use-element-dimensions';
+import useDimensions from '../hooks/use-element-dimensions';
 
 interface TableProps {
     data: any[][];
