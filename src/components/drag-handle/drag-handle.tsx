@@ -58,9 +58,10 @@ export const DragHandler = ({
             e.preventDefault();
             move(Number(e.detail['amount']));
       }
-      elRef.current?.addEventListener('move', customEventHandler as never);
+      const currentEl = elRef.current;
+      currentEl?.addEventListener('move', customEventHandler as never);
       return () => {
-          elRef.current?.removeEventListener('move', customEventHandler as never);
+          currentEl?.removeEventListener('move', customEventHandler as never);
       }
   }, [move])
 
